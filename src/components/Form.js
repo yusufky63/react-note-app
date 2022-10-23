@@ -101,7 +101,9 @@ function Form() {
 
             <div className="">
               {!user ? (
-                <NavLink to="/login" className="mr-5 font-bold text-red-500">Lütfen Giriş Yapınız !</NavLink>
+                <NavLink to="/login" className="mr-5 font-bold text-red-500">
+                  Lütfen Giriş Yapınız !
+                </NavLink>
               ) : (
                 <button
                   onClick={handleAddNotes}
@@ -113,7 +115,6 @@ function Form() {
             </div>
           </div>
         </div>
-        
       </div>
     </>
   );
