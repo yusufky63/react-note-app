@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { addNote as addNoteFirebase } from "../firebase";
 
@@ -100,7 +101,7 @@ function Form() {
 
             <div className="">
               {!user ? (
-                <span className="text-red-500">Lütfen Giriş Yapınız !</span>
+                <NavLink to="/login" className="mr-5 font-bold text-red-500">Lütfen Giriş Yapınız !</NavLink>
               ) : (
                 <button
                   onClick={handleAddNotes}

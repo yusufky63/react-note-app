@@ -25,7 +25,10 @@ function ArchiveNotes() {
 
   return (
     <div>
-      <h1 className="text-4xl text-center my-10">ARŞİV</h1>{" "}
+     <h1 className="my-10 flex justify-center text-5xl text-gray-500 font-bold text-center">
+       Arşiv
+      </h1>
+     
       <form className="text-center">
         <input
           onChange={(e) => dispatch(filterNoteArchive(e.target.value))}

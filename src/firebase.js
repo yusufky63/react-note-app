@@ -10,6 +10,8 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   GoogleAuthProvider,
+  GithubAuthProvider,
+ 
 } from "firebase/auth";
 
 import {
@@ -149,30 +151,30 @@ export const googleLogin = async () => {
 
 //GITHUB AUTH
 
-// const providerGithub = new GoogleAuthProvider();
+const providerGithub = new GithubAuthProvider();
 
-// export const githubLogin = async () => {
-//  await signInWithPopup(providerGithub)
+export const githubLogin = async () => {
+  await signInWithPopup(auth, providerGithub)
+    .then(function (result) {
+      console.log(result);
+      var user = result.user;
+      console.log(user);
+      store.dispatch(LoginRedux(user));
 
-//   .then(function(result) {
-
-//      var user = result.user;
-//      console.log(user);
-//       store.dispatch(LoginRedux(user));
-
-//       toast.success("Github İle Giriş Yapıldı");
-//       window.location.href = "/";
-//   }).catch(function(error) {
-//     toast.error("Github ile giriş yapılamadı!", error.message);
-//   });
-
-// };
+      toast.success("Github İle Giriş Yapıldı");
+      window.location.href = "/";
+    })
+    .catch(function (error) {
+      toast.error("Github ile giriş yapılamadı!", error.message);
+      console.log(error.message);
+    });
+};
 
 //ADD NOTE
 export const addNote = async (note) => {
   try {
     const result = await addDoc(collection(db, "notes"), note);
-  
+
     return result.id;
   } catch (error) {
     toast.error(error.message);
@@ -199,7 +201,7 @@ export const deleteNote = async (id) => {
 export const updateNote = async (id, data) => {
   try {
     const updateRef = await updateDoc(doc(db, "notes", id), data);
-    toast.success("Görev Güncellendi");
+    toast.success("Not Güncellendi");
     return updateRef;
   } catch (error) {
     toast.error(
@@ -215,7 +217,7 @@ export const addArchiveNotes = async (note) => {
   try {
     const result = await addDoc(collection(db, "archive"), note);
     deleteNote(note.id);
-    toast.success("Not Arşive Eklendi");
+    toast.warning("Not Arşive Eklendi");
     return result.id;
   } catch (error) {
     toast.error(error.message);
@@ -227,7 +229,6 @@ export const addArchiveNotes = async (note) => {
 export const deleteArchiveNotes = async (id) => {
   try {
     await deleteDoc(doc(db, "archive", id));
- 
   } catch (error) {
     console.log(error.message);
     toast.error(
@@ -252,3 +253,6 @@ export const restoreToNotes = async (note) => {
 
   await addDoc(collection(db, "notes"), note);
 };
+
+
+

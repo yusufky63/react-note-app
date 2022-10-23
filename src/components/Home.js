@@ -34,6 +34,8 @@ function Home() {
             Giriş Yap
           </NavLink>
         )}
+    
+       
         {user.email && (
           <div className="flex items-center border border-gray-800 rounded-lg p-1">
             {" "}
