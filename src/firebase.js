@@ -248,7 +248,7 @@ const errorMessages = (error) => {
       ? "Şifre en az 6 karakter olmalıdır." 
       : error.message === "Firebase: Error (auth/invalid-email)."
       ? "Geçersiz E-posta" === "Firebase: Error (auth/user-not-found)."
-      : error.message === "Firebase: The email address is already in use by another account. (auth/email-already-in-use)."
+      : error.message === "Firebase: Error (auth/email-already-in-use)."
         ? "Bu e-posta adresi zaten kullanımda."
         : error.message ===
           "Firebase: The email address is badly formatted. (auth/invalid-email)."
