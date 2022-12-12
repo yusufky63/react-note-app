@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { toast } from "react-toastify";
 import { setNotes, setNotesArchive } from "./redux/notes/notesSlice";
+import { login as LoginRedux, logout as LogoutRedux } from "./redux/auth";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -11,7 +12,6 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   GithubAuthProvider,
- 
 } from "firebase/auth";
 
 import {
@@ -25,7 +25,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { login as LoginRedux, logout as LogoutRedux } from "./redux/auth";
+
 
 import { store } from "./redux/store";
 const firebaseConfig = {
@@ -50,23 +50,26 @@ export const register = async (email, password) => {
       password
     );
     toast.success("Kayıt Başarılı");
-    window.location.href = "/";
+    if (auth.currentUser.email) {
+      window.location.href = "/";
+      toast.success("Kayıt Başarılı")
+    }
     return user;
   } catch (error) {
-    toast.error(error);
+    errorMessages(error)
   }
 };
 
 //LOGIN
 export const login = async (email, password) => {
+
   try {
     const { user } = await signInWithEmailAndPassword(auth, email, password);
     toast.success("Giriş Başarılı", user.email);
-
-    window.location.href = "/";
+    if (auth.currentUser.email) { window.location.href = "/"; }
     return user;
   } catch (error) {
-    toast.error(error.message);
+    errorMessages(error)
   }
 };
 
@@ -75,20 +78,21 @@ export const logout = async () => {
   try {
     await signOut(auth);
     toast.success("Çıkış Başarılı");
+    window.location.href = "/";
     return true;
   } catch (error) {
-    toast.error(error.message);
-    window.location.href = "/";
+    errorMessages(error)
+
   }
 };
-
-export const resetMail = async (email) => {
+//RESET PASSWORD
+export const resetPasword = async (email) => {
   try {
     await sendPasswordResetEmail(auth, email);
-    toast.success("Şifre Sıfırlama Maili Gönderildi");
+    toast.success("Şifre Sıfırlama Maili Gönderildi (Spam Kutunuzu Kontrol Ediniz)");
     return true;
   } catch (error) {
-    toast.error("Lütfen Geçerli bir Mail Adresi Giriniz !", error.message);
+    errorMessages(error)
     return false;
   }
 };
@@ -96,7 +100,6 @@ export const resetMail = async (email) => {
 onAuthStateChanged(auth, (user) => {
   if (user) {
     store.dispatch(LoginRedux(user));
-
     onSnapshot(
       query(collection(db, "notes"), where("uid", "==", user.uid)),
       (doc) => {
@@ -110,6 +113,7 @@ onAuthStateChanged(auth, (user) => {
         );
       }
     );
+    //ARCHIVE
     onSnapshot(
       query(collection(db, "archive"), where("uid", "==", user.uid)),
       (doc) => {
@@ -138,35 +142,30 @@ providerGoogle.setCustomParameters({
 export const googleLogin = async () => {
   await signInWithPopup(auth, providerGoogle)
     .then((result) => {
-      console.log(result);
       store.dispatch(LoginRedux(result));
       toast.success("Google İle Giriş Yapıldı");
-      window.location.href = "/";
-      // ...
+      console.log(auth.currentUser.email)
+      if (auth.currentUser) { window.location.href = "/"; }
+
     })
     .catch((error) => {
       toast.error("Google ile giriş yapılamadı!", error.message);
+      errorMessages(error)
     });
 };
 
 //GITHUB AUTH
-
 const providerGithub = new GithubAuthProvider();
-
 export const githubLogin = async () => {
   await signInWithPopup(auth, providerGithub)
     .then(function (result) {
-      console.log(result);
-      var user = result.user;
-      console.log(user);
-      store.dispatch(LoginRedux(user));
-
+      store.dispatch(LoginRedux(result.user));
       toast.success("Github İle Giriş Yapıldı");
-      window.location.href = "/";
+      if (auth.currentUser.email) { window.location.href = "/"; }
     })
     .catch(function (error) {
       toast.error("Github ile giriş yapılamadı!", error.message);
-      console.log(error.message);
+      errorMessages(error)
     });
 };
 
@@ -174,10 +173,9 @@ export const githubLogin = async () => {
 export const addNote = async (note) => {
   try {
     const result = await addDoc(collection(db, "notes"), note);
-
     return result.id;
   } catch (error) {
-    toast.error(error.message);
+    errorMessages(error)
   }
 
   await addDoc(collection(db, "notes"), note);
@@ -189,11 +187,7 @@ export const deleteNote = async (id) => {
     await deleteDoc(doc(db, "notes", id));
   } catch (error) {
     console.log(error.message);
-    toast.error(
-      error.message === "Missing or insufficient permissions."
-        ? "İşlem İçin Yetkiniz Yok (Başka Bir Kullanıcı Tarafından Eklendi !"
-        : error.message
-    );
+    errorMessages(error)
   }
 };
 
@@ -204,11 +198,7 @@ export const updateNote = async (id, data) => {
     toast.success("Not Güncellendi");
     return updateRef;
   } catch (error) {
-    toast.error(
-      error.message === "Missing or insufficient permissions."
-        ? "İşlem İçin Yetkiniz Yok (Başka Bir Kullanıcı Tarafından Eklendi !"
-        : error.message
-    );
+    errorMessages(error)
   }
 };
 
@@ -220,7 +210,7 @@ export const addArchiveNotes = async (note) => {
     toast.warning("Not Arşive Eklendi");
     return result.id;
   } catch (error) {
-    toast.error(error.message);
+    errorMessages(error)
   }
   await addDoc(collection(db, "archive"), note);
 };
@@ -230,12 +220,7 @@ export const deleteArchiveNotes = async (id) => {
   try {
     await deleteDoc(doc(db, "archive", id));
   } catch (error) {
-    console.log(error.message);
-    toast.error(
-      error.message === "Missing or insufficient permissions."
-        ? "İşlem İçin Yetkiniz Yok (Başka Bir Kullanıcı Tarafından Eklendi !"
-        : error.message
-    );
+    errorMessages(error)
   }
 };
 
@@ -248,11 +233,45 @@ export const restoreToNotes = async (note) => {
     toast.success("Not Geri Yüklendi");
     return result.id;
   } catch (error) {
-    toast.error(error.message);
+    errorMessages(error)
   }
 
   await addDoc(collection(db, "notes"), note);
 };
 
 
+//Error Handling
+const errorMessages = (error) => {
+  toast.error(
+    error.message ===
+      "Firebase: Password should be at least 6 characters (auth/weak-password)."
+      ? "Şifre en az 6 karakter olmalıdır." 
+      : error.message === "Firebase: Error (auth/invalid-email)."
+      ? "Geçersiz E-posta" === "Firebase: Error (auth/user-not-found)."
+      : error.message === "Firebase: The email address is already in use by another account. (auth/email-already-in-use)."
+        ? "Bu e-posta adresi zaten kullanımda."
+        : error.message ===
+          "Firebase: The email address is badly formatted. (auth/invalid-email)."
+          ? "Geçersiz E-posta"
+          : error.message ===
+            "Firebase: Password should be at least 6 characters (auth/weak-password)."
+            ? "Şifre en az 6 karakter olmalıdır."
+            : error.message === "Firebase: Error (auth/user-not-found)."
+              ? "Kullanıcı Bulunamadı"
+              : error.message === "Firebase: Error (auth/wrong-password)."
+                ? "Şifre Yanlış"
+                : error.message === "Firebase: Error (auth/too-many-requests)."
+                  ? "Çok fazla giriş denemesi. Lütfen daha sonra tekrar deneyin."
+                  : error.message === "Missing or insufficient permissions."
+                    ? "İşlem İçin Yetkiniz Yok (Başka Bir Kullanıcı Tarafından Eklendi !"
+                    : error.message === "Firebase: Error (auth/requires-recent-login)."
+                      ? "Tekrar Giriş Yapın"
+                      : error.message === "auth/weak-password"
+                        ? "Şifre En Az 6 Karakter Olmalıdır"
+                        : error.message === "Firebase: Error (auth/user-disabled)."
+                          ? "Kullanıcı Engellendi"
+                          : error.message
 
+  );
+  console.log(error.message)
+};

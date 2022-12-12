@@ -1,10 +1,10 @@
 import Home from "./components/Home";
 import "./App.css";
-import Register from "./components/Register";
+import Register from "./components//User/Register";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Routes, Route } from "react-router-dom";
-import Login from "./components/Login";
+import Login from "./components/User/Login";
 import ArchiveNotes from "./components/ArchiveNotes";
 
 function App() {

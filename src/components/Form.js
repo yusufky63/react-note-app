@@ -4,12 +4,15 @@ import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { addNote as addNoteFirebase } from "../firebase";
 
+import ColorPalette from "./ColorPalette";
 function Form() {
   const [color, setColor] = useState("bg-transparent");
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
 
   const { user } = useSelector((state) => state.auth);
+
+
 
   const handleAddNotes = (e) => {
     e.preventDefault();
@@ -59,46 +62,7 @@ function Form() {
           ></textarea>
           <br />
           <div className="flex justify-between ">
-            <div>
-              {" "}
-              <button
-                onClick={() => {
-                  setColor("bg-transparent");
-                }}
-                className="border border-gray-700 bg-transparent mx-1 rounded-full h-10 w-10"
-              >
-                {color === "bg-transparent" && <span>&#10003;</span>}
-              </button>
-              <button
-                onClick={() => {
-                  setColor("bg-purple-800");
-                }}
-                className="bg-purple-800 mx-1 rounded-full h-10 w-10"
-              >
-                {color === "bg-purple-800" && <span>&#10003;</span>}
-              </button>
-              <button
-                onClick={() => {
-                  setColor("bg-emerald-700");
-                }}
-                className=" bg-emerald-700 mx-1 rounded-full h-10 w-10  "
-              >
-                {color === "bg-emerald-700" && <span>&#10003;</span>}
-              </button>
-              <button
-                onClick={() => setColor("bg-rose-800")}
-                className="bg-rose-800    mx-1 rounded-full h-10 w-10 "
-              >
-                {color === "bg-rose-800" && <span>&#10003;</span>}
-              </button>
-              <button
-                onClick={() => setColor("bg-gray-500")}
-                className="bg-gray-500 mx-1 rounded-full h-10 w-10 "
-              >
-                {color === "bg-gray-500" && <span>&#10003;</span>}
-              </button>
-            </div>
-
+            <ColorPalette setColor={setColor} color={color} />
             <div className="">
               {!user ? (
                 <NavLink to="/login" className="mr-5 font-bold text-red-500">

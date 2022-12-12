@@ -3,10 +3,11 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { useSelector } from "react-redux";
 import { updateNote, deleteNote } from "../../firebase";
-import { value } from "../../redux/notes/notesSlice";
+import { notes } from "../../redux/notes/notesSlice";
+import ColorPalette from "../ColorPalette";
 
 export default function BasicModal({ selectedNote }) {
-  const data = useSelector(value);
+  const getNotes = useSelector(notes);
 
   const [color, setColor] = useState(selectedNote.color);
   const [title, setTitle] = useState(selectedNote.title);
@@ -22,7 +23,7 @@ export default function BasicModal({ selectedNote }) {
 
   const handleEdit = () => {
     // eslint-disable-next-line array-callback-return
-    data.map((item) => {
+    getNotes.map((item) => {
       if (item.id === selectedNote.id) {
         updateNote(item.id, {
           title,
@@ -42,7 +43,7 @@ export default function BasicModal({ selectedNote }) {
 
   const handleDelete = () => {
     // eslint-disable-next-line array-callback-return
-    data.map((item) => {
+    getNotes.map((item) => {
       if (item.id === selectedNote.id) {
         deleteNote(item.id);
       }
@@ -99,47 +100,7 @@ export default function BasicModal({ selectedNote }) {
             <div>Son Güncelleme Tarihi : {selectedNote.update}</div>
           </div>
           <br />
-          <div className="flex justify-between px-3">
-            <div>
-              <button
-                onClick={() => {
-                  setColor("bg-transparent");
-                }}
-                className="border border-gray-700 bg-transparent mx-1 rounded-full h-10 w-10"
-              >
-                {color === "bg-transparent" && <span>&#10003;</span>}
-              </button>
-              <button
-                onClick={() => {
-                  setColor("bg-purple-800");
-                }}
-                className="bg-purple-800 mx-1 rounded-full h-10 w-10"
-              >
-                {color === "bg-purple-800" && <span>&#10003;</span>}
-              </button>
-              <button
-                onClick={() => {
-                  setColor("bg-emerald-700");
-                }}
-                className=" bg-emerald-700 mx-1 rounded-full h-10 w-10  "
-              >
-                {color === "bg-emerald-700" && <span>&#10003;</span>}
-              </button>
-              <button
-                onClick={() => setColor("bg-rose-800")}
-                className="bg-rose-800    mx-1 rounded-full h-10 w-10 "
-              >
-                {color === "bg-rose-800" && <span>&#10003;</span>}
-              </button>
-
-              <button
-                onClick={() => setColor("bg-gray-500")}
-                className="bg-gray-500 mx-1 rounded-full h-10 w-10 "
-              >
-                {color === "bg-gray-500" && <span>&#10003;</span>}
-              </button>
-            </div>
-          </div>
+          <ColorPalette setColor={setColor} color={color} />
           <br />
 
           <div className="flex justify-between ">

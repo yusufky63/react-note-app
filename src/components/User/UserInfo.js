@@ -1,22 +1,15 @@
 import React from "react";
-
-
-
-
 import { useSelector } from "react-redux";
-import {logout} from "../firebase";
+import {logout} from "../../firebase";
 import { NavLink } from "react-router-dom";
 
-
 export function UserInfo() {
-    
     const { user } = useSelector((state) => state.auth);
-  
     const handleLogout = () => {
       logout();
     };
   return (
-    <div className="flex justify-end mt-1 mb-5 right-0 ">
+    <div className="flex justify-end xl:mr-[400px] mt-1 mb-5 ">
       {!user && (
         <NavLink
           className="border border-gray-600 hover:bg-gray-800 p-2 px-5 bg-transparent text-white rounded-lg mx-1"

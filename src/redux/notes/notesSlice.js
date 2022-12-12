@@ -25,7 +25,7 @@ export const notesSlice = createSlice({
   },
 });
 
-export const value = (state) => state.notes.note;
-export const valueArchive = (state) => state.notes.noteArchive;
+export const notes = (state) => state.notes.note;
+export const archive = (state) => state.notes.noteArchive;
 export const { filterNote, setNotes, setNotesArchive, filterNoteArchive } =
   notesSlice.actions;

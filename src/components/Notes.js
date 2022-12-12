@@ -1,15 +1,13 @@
-import { value } from "../redux/notes/notesSlice";
+import { notes } from "../redux/notes/notesSlice";
 import { useSelector } from "react-redux";
-
 import EditNote from "./modal/EditNote";
 import { deleteNote, addArchiveNotes } from "../firebase";
 import { toast } from "react-toastify";
 
 function Notes() {
-  const data = useSelector(value);
-
+  const getNotes = useSelector(notes);
   const activeFilter = useSelector((state) => state.notes.activeFilter); // NoteSlice'da tanımladığımız activeFilter'ı aldık.
-  const filteredItems = data.filter(
+  const filteredItems = getNotes.filter(
     (item) => item.text.toLowerCase().includes(activeFilter.toLowerCase()) // Search'e girilen değerler activeFilter'e kaydediliyordu. Burda search'e girilen değerler ile title'daki değerler bir birini kapsıyorsa filteredItems'a kaydet diyerek. Filtreleme yaptırdık.
   );
 
@@ -23,7 +21,7 @@ function Notes() {
   };
 
   return (
-    <>
+    <div className="mx-2 lg:mx-10">
       <br />
       <span className=" bg-yellow-400 text-black p-1 rounded-lg">
         Kayıt Bulundu : {filteredItems.length}
@@ -95,23 +93,12 @@ function Notes() {
                   </svg>
                 </button>
               </div>
-              {/* <br />
-              <div className=" flex justify-between pt-5 p-2 ">
-                <button className="border border-gray-700 bg-transparent rounded-lg px-3 py-1.5 hover:bg-gray-900">
-                  <EditNote selectedNote={item}></EditNote>
-                </button>
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="border border-gray-700 bg-transparen rounded-lg  px-8 py-1.5 hover:bg-gray-900"
-                >
-                  Sil
-                </button>
-              </div> */}
+
             </div>
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 }
 
