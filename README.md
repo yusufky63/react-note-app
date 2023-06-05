@@ -1,4 +1,4 @@
-Live : https://react-notes-app-redux.netlify.app/
+Live : https://noteap.netlify.app/
 
 # Getting Started with Create React App
 
