@@ -9,8 +9,8 @@ function Aside() {
 
   return (
     <div
-      className={`absolute z-40 left-0 flex flex-col bg-[#202124] shadow-xl h-screen w-${
-        aside ? "14" : "54"
+      className={`absolute z-40 left-0 flex flex-col bg-[#202124] rounded-lg shadow-sm w-${
+        aside ? "" : "14"
       } text-white p-2 justify-between items-center transition-width duration-300 ease-in-out`}
     >
       <div className="flex flex-col text-left justify-start  lg:mr-0">

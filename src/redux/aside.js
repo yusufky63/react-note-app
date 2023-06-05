@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const asideSlice = createSlice({
   name: "aside",
   initialState: {
-    aside: false,
+    aside: true,
   },
   reducers: {
     asideToggle: (state) => {

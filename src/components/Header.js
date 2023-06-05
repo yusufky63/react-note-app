@@ -27,7 +27,7 @@ function Header() {
 
   return (
     <>
-      <div className="flex justify-between p-3 items-center border border-b-2 border-gray-700 ">
+      <div className="flex justify-between p-3 items-center  border-b-2 border-gray-700 ">
         <div className="flex items-center space-x-4 ">
           <button
             onClick={handleToggle}

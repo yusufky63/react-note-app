@@ -2,13 +2,13 @@ import React from "react";
 
 function DefaultProfileIcon({ onClick }) {
   return (
-    <button onClick={onClick} className="focus:outline-none border border-gray-600 rounded-lg p-1">
+    <button onClick={onClick} className="focus:outline-none ">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
-        stroke="currentColor"
+        stroke="white"
         className="w-8 h-8"
       >
         <title>Default Profile Icon</title>
