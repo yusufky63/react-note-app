@@ -5,25 +5,27 @@ import { useSelector } from "react-redux";
 import { updateNote, deleteNote } from "../../firebase";
 import { notes } from "../../redux/notes/notesSlice";
 import ColorPalette from "../ColorPalette";
+import EditIcon from "../../assets/EditIcon";
+import DeleteIcon from "../../assets/DeleteIcon";
+import AcceptIcon from "../../assets/AcceptIcon";
+import PaletteIcon from "../../assets/PaletteIcon";
 
-export default function BasicModal({ selectedNote }) {
+export default function EditNote({ selectedNote }) {
   const getNotes = useSelector(notes);
 
   const [color, setColor] = useState(selectedNote.color);
   const [title, setTitle] = useState(selectedNote.title);
   const [text, setText] = useState(selectedNote.text);
 
-  //MODALs
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleEdit = () => {
-    // eslint-disable-next-line array-callback-return
-    getNotes.map((item) => {
+    getNotes.forEach((item) => {
       if (item.id === selectedNote.id) {
         updateNote(item.id, {
           title,
@@ -35,129 +37,96 @@ export default function BasicModal({ selectedNote }) {
             " " +
             new Date().toLocaleDateString("tr-TR"),
         });
-
         handleClose();
       }
     });
   };
 
   const handleDelete = () => {
-    // eslint-disable-next-line array-callback-return
-    getNotes.map((item) => {
+    getNotes.forEach((item) => {
       if (item.id === selectedNote.id) {
         deleteNote(item.id);
       }
     });
   };
+
+  const handleColorChange = (selectedColor) => {
+    setColor(selectedColor);
+    setIsOpen(false);
+  };
+
+  const handlePaletteToggle = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div>
-      <button className="px-1 mb-3" onClick={handleOpen}>
-        {" "}
-        <svg
-          className="w-8 h-8"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-          ></path>
-        </svg>
+      <button className="" onClick={handleOpen}>
+        <EditIcon />
       </button>
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        className="flex justify-center items-center"
       >
-        <Box sx={style} className="w-full md:w-3/5">
-          <h1 className="text-center text-3xl text-gray-500 font-medium">
-            Düzenle
-          </h1>
-          <br />
-          <input
-            placeholder="Başlık"
-            className="border-l-4 border-l-yellow-300 outline-none p-2"
-            type="text"
-            onChange={(e) => setTitle(e.target.value)}
-            value={title}
-          />
-          <textarea
-            style={{ backgroundColor: color }}
-            className={`${color} outline-none p-3 resize-none rounded-lg mt-5 border border-gray-500`}
-            placeholder="Notunuzu giriniz"
-            cols="50"
-            rows="8"
-            onChange={(e) => setText(e.target.value)}
-            value={text}
-          ></textarea>
-          <div className=" text-sm">
-            <div>Eklenme Tarihi : {selectedNote.date}</div>
-            <div>Son Güncelleme Tarihi : {selectedNote.update}</div>
-          </div>
-          <br />
-          <ColorPalette setColor={setColor} color={color} />
-          <br />
-
-          <div className="flex justify-between ">
-            <button
-              onClick={handleEdit}
-              className="py-2 px-2 hover:bg-green-700 bg-transparent rounded-lg ml-2 mb-2"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                ></path>
-              </svg>
-            </button>
+        <Box  className="flex flex-col z-10 inset-0 overflow-y-auto h-3/4 w-3/4 md:w-2/3 lg:w-2/4 xl:w-1/4 bg-[#202124] text-gray-200 rounded-lg p-5 outline-none border border-gray-500">
+          <div className="flex justify-between items-center mb-3">
+            <input
+              placeholder="Başlık"
+              className=" text-lg font-semibold outline-none"
+              type="text"
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
+            />
             <button
               onClick={handleDelete}
-              className="py-2 px-2 hover:bg-red-700 bg-transparent rounded-lg ml-2 mb-2"
+              className="ml-3 text-red-500 hover:text-red-700"
             >
-              <svg
-                className="w-7 h-7"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                ></path>
-              </svg>
+              <DeleteIcon />
             </button>
+          </div>
+
+          <textarea
+            style={{ backgroundColor: color }}
+            className={`text-sm text-[#e8eaed] resize-none rounded-lg p-3 outline-none flex-grow  ${color} shadow-2xl bg-opacity-50 ${
+              color === "bg-transparent" ? "border border-gray-600" : ""
+            }`}
+            placeholder="Not Giriniz..."
+            rows="5"
+            onChange={(e) => setText(e.target.value)}
+            value={text}
+          />
+          <div className="relative top-2 my-3 items-center">
+            <button
+              onClick={handlePaletteToggle}
+              className={` p-2 rounded-lg border border-gray-600`}
+            >
+              <PaletteIcon />
+            </button>
+            {isOpen && (
+              <div className="absolute top-1 left-10 z-10">
+                <div className="flex flex-row">
+                  <ColorPalette setColor={handleColorChange} color={color} />
+                </div>
+              </div>
+            )}
+            <button
+              onClick={handleEdit}
+              className="absolute right-0 bottom-0 p-2 rounded-lg border border-gray-600"
+            >
+              <AcceptIcon />
+            </button>
+          </div>
+          <div className="text-xs flex mt-1 justify-between text-gray-500 flex-col lg:flex-row">
+            <span>Oluşturma : {selectedNote.date}</span>
+            {selectedNote.update && (
+              <span>Düzenleme : {selectedNote.update}</span>
+            )}
           </div>
         </Box>
       </Modal>
     </div>
   );
 }
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-
-  bgcolor: "black",
-
-  boxShadow: 24,
-  p: 4,
-  borderRadius: 10,
-};

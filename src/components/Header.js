@@ -1,27 +1,63 @@
 import React from "react";
-import { filterNote } from "../redux/notes/notesSlice";
 import { useDispatch } from "react-redux";
+import { filterNote, filterNoteArchive } from "../redux/notes/notesSlice";
+import { useLocation } from "react-router-dom";
+
+import ToggleIcon from "../assets/ToggleIcon";
+import { UserInfo } from "./User/UserInfo";
+import { asideToggle } from "../redux/aside";
+import { useEffect } from "react";
 
 function Header() {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const locationPage = location.pathname.slice(1);
+  console.log(locationPage);
+  const handleToggle = () => {
+    dispatch(asideToggle());
+  };
+
+  useEffect(() => {
+    if (locationPage === "") {
+      dispatch(filterNote(""));
+    } else if (locationPage === "archive") {
+      dispatch(filterNoteArchive(""));
+    }
+  }, [locationPage, dispatch]);
 
   return (
     <>
-      <div>
-        <h1 className=" flex justify-center text-5xl text-gray-500 font-bold text-center">
-          Note App
-        </h1>
-
-        <br />
-        <form className="text-center">
+      <div className="flex justify-between p-3 items-center border border-b-2 border-gray-700 ">
+        <div className="flex items-center space-x-4 ">
+          <button
+            onClick={handleToggle}
+            className="text-gray-700 border border-gray-700 hover:bg-[#24292F]/90 hover:text-white   font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center "
+          >
+            <ToggleIcon />
+          </button>
+          <h1 className="text-2xl text-gray-500 font-bold mx-5 text-center">
+            NApp
+          </h1>
+        </div>
+        <div className="flex-grow">
           <input
-            onChange={(e) => dispatch(filterNote(e.target.value))}
+            onChange={(e) => {
+              const searchValue = e.target.value;
+              if (locationPage === "") {
+                dispatch(filterNote(searchValue));
+              } else if (locationPage === "archive") {
+                dispatch(filterNoteArchive(searchValue));
+              }
+            }}
             type="text"
             placeholder="Arama"
-            className="border border-gray-700 rounded-lg px-10 py-2 outline-none text-center placeholder:italic placeholder:text-slate-400"
+            className="md:w-1/2 mx-12 ml-8 border border-gray-900  rounded-lg p-2 outline-none text-center bg-gray-600 placeholder:text-slate-200"
           />
-        </form>
-        <br />
+        </div>
+
+        <div className="flex">
+          <UserInfo />
+        </div>
       </div>
     </>
   );
