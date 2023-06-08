@@ -55,7 +55,8 @@ function Form() {
   }, []);
 
   return (
-    <div className="flex justify-center items-center  ">
+   <>
+  {user &&  <div className="flex justify-center items-center  ">
       <div
         ref={formRef}
         className={`shadow-2xl rounded-lg p-2 border mt-10 border-gray-700 ${
@@ -113,7 +114,8 @@ function Form() {
           </div>
         )}
       </div>
-    </div>
+    </div>}
+   </>
   );
 }
 

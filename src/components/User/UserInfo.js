@@ -22,7 +22,7 @@ export function UserInfo() {
   return (
     <div className="z-50">
       {user && (
-        <div className="flex items-center border border-gray-800 rounded-lg p-1">
+        <div className="flex items-center  border-gray-800  p-1">
           {
             <span className="hidden md:block text-gray-400 text-sm mr-2">
               {user.email || user.displayName}

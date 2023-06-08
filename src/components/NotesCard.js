@@ -29,7 +29,10 @@ function NotesCard({ data, handleDelete, handleArchive, handleRestore }) {
         return "";
     }
   };
-  
+
+  const handleEdit = (item) => {
+    <EditNote selectedNote={item}></EditNote>;
+  };
 
   return (
     <div className="ml-6 ">
@@ -44,14 +47,16 @@ function NotesCard({ data, handleDelete, handleArchive, handleRestore }) {
             }`}
             onMouseEnter={() => handleItemHover(item.id)}
             onMouseLeave={handleItemLeave}
-            style={{ height: "190px",width:"320px" }}
+            style={{ height: "190px", width: "320px" }}
+            onClick={() => handleEdit(item)}
           >
-            <div>
+            <div onClick={() => handleEdit(item)}>
               <div>
                 {item.title && (
                   <h1 className="lg:text-base font-bold text-gray-100 break-words">
-                    {item.title.length > 20 ? `${item.title.substring(0, 50)}...` : item.title}
-                    
+                    {item.title.length > 20
+                      ? `${item.title.substring(0, 50)}...`
+                      : item.title}
                   </h1>
                 )}
                 <br />

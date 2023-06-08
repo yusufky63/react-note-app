@@ -27,7 +27,7 @@ function Header() {
 
   return (
     <>
-      <div className="flex justify-between p-3 items-center  border-b-2 border-gray-700 ">
+      <div className="flex justify-between p-3 items-center  border-b-2 border-gray-700 px-2">
         <div className="flex items-center space-x-4 ">
           <button
             onClick={handleToggle}
@@ -51,11 +51,11 @@ function Header() {
             }}
             type="text"
             placeholder="Arama"
-            className="md:w-1/2 mx-12 ml-8 border border-gray-900  rounded-lg p-2 outline-none text-center bg-gray-600 placeholder:text-slate-200"
+            className="md:w-1/2 w-5/6  ml-8 border border-gray-900  rounded-lg p-2 outline-none text-center bg-gray-600 placeholder:text-slate-200"
           />
         </div>
 
-        <div className="flex">
+        <div className="hidden md:block">
           <UserInfo />
         </div>
       </div>
