@@ -35,7 +35,6 @@ function Notes() {
   };
 
   const handleArchive = (item) => {
-    console.log(item);
     addArchiveNotes(item);
   };
 

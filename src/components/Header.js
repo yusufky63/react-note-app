@@ -12,7 +12,6 @@ function Header() {
   const dispatch = useDispatch();
   const location = useLocation();
   const locationPage = location.pathname.slice(1);
-  console.log(locationPage);
   const handleToggle = () => {
     dispatch(asideToggle());
   };

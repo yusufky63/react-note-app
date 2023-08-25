@@ -145,7 +145,6 @@ export const googleLogin = async () => {
     .then((result) => {
       store.dispatch(LoginRedux(result));
       toast.success("Google İle Giriş Yapıldı");
-      console.log(auth.currentUser.email);
       if (auth.currentUser) {
         window.location.href = "/";
       }
@@ -190,7 +189,6 @@ export const deleteNote = async (id) => {
   try {
     await deleteDoc(doc(db, "notes", id));
   } catch (error) {
-    console.log(error.message);
     errorMessages(error);
   }
 };
@@ -231,7 +229,6 @@ export const deleteArchiveNotes = async (id) => {
 //ARCHIVE RESTORE NOTE
 export const restoreToNotes = async (note) => {
   try {
-    console.log(note);
     const result = await addDoc(collection(db, "notes"), note);
     deleteArchiveNotes(note.id);
     toast.success("Not Geri Yüklendi");
